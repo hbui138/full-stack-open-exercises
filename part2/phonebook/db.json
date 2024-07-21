@@ -1,0 +1,19 @@
+{
+  "persons": [
+    {
+      "id": "750f",
+      "name": "Hieu Bui",
+      "number": "3456"
+    },
+    {
+      "id": "8cd0",
+      "name": "Data Science IBM",
+      "number": "234567"
+    },
+    {
+      "id": "4983",
+      "name": "",
+      "number": ""
+    }
+  ]
+}
