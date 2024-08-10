@@ -19,6 +19,34 @@ const App = () => {
     });
   }, []);
 
+  const handleAddMessage = (personName) => {
+    setMessageType("success")
+    setMessage(`Added ${personName}`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
+  const handleDeleteMessage = (personName) => {
+    setMessageType("error")
+    setMessage(
+      `Deleted ${personName} from the server`
+    );
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
+  const handleUpdateMessage = (personName) => {
+    setMessageType("success")
+    setMessage(
+      `Information of ${personName} has been updated successfully`
+    );
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
   const handleAdd = (event) => {
     event.preventDefault();
     const personObj = {
@@ -35,7 +63,15 @@ const App = () => {
         setNewPhone("");
 
         handleAddMessage(personObj.name);
-      });
+      })
+      .catch(error => {
+        console.log(error.response.data.error)
+        setMessageType('error')
+        setMessage(`Validation error ${error.response.data.error}`)
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000);
+      }) 
     } else {
       const confirmation = window.confirm(
         `${newName} is already added to phonebook, replace the old number with new one?`
@@ -44,23 +80,6 @@ const App = () => {
         handleNumberUpdate(existingPerson.id, personObj.number);
       }
     }
-  };
-
-  const handleAddMessage = (personName) => {
-    setMessageType("success")
-    setMessage(`Added ${personName}`);
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-  };
-
-  const handleDeleteMessage = (personName) => {
-    setMessage(
-      `Information of ${personName} has already been removed from the server`
-    );
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
   };
 
   const handleNumberUpdate = (id, newNumber) => {
@@ -73,7 +92,15 @@ const App = () => {
       );
       setNewName("");
       setNewPhone("");
-      handleAddMessage(returnedPerson.name);
+      handleUpdateMessage(returnedPerson.name);
+    })
+    .catch(error => {
+      console.log(error.response.data.error)
+      setMessageType('error')
+      setMessage(`Validation error ${error.response.data.error}`)
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     });
   };
 
@@ -96,10 +123,11 @@ const App = () => {
         .remove(id)
         .then((returnedPerson) => {
           persons.map((person) => (person.id !== id ? person : returnedPerson));
+          handleDeleteMessage(personToDelete.name);
         })
         .catch((error) => {
-          setMessageType("error")
-          handleDeleteMessage(personToDelete.name);
+          setMessageType('error')
+          setMessage(`The information of ${personToDelete} has already been removed from the server`)
           setPersons(persons.filter((person) => person.id !== id));
         });
 
